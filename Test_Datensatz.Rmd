@@ -1,0 +1,39 @@
+---
+title: "Test Datensatz"
+author: "Sophie Hensgen"
+date: "5/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+```
+
+## Aufbereitung
+
+
+```{r }
+
+df1 <- read_csv("data_project.csv")
+df2 <- read_csv("Testdata-02.csv")
+
+```
+
+```{r }
+
+head(df1)
+
+```
+
+## Analyse
+
+
+
+```{r , echo=FALSE}
+df1$sex <- df1$v_19
+df1$sex
+
+```
+
+
