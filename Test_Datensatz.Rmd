@@ -5,35 +5,138 @@ date: "5/5/2021"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r packages, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(readr)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
 ```
 
 ## Aufbereitung
 
 
-```{r }
+```{r Datensatz reinladen}
 
 df1 <- read_csv("data_project.csv")
 df2 <- read_csv("Testdata-02.csv")
 
 ```
 
-```{r }
+```{r Impression}
 
 head(df1)
+head(df2)
 
 ```
 
-## Analyse
 
 
+```{r Aufbereitung df1, echo=FALSE}
 
-```{r , echo=FALSE}
-df1$sex <- df1$v_19
-df1$sex
+# select variables, which I need for the analysis.
+
+df_label <- df1 %>%
+  select(c_0003, c_0004, c_0005, c_0006, v_19, v_258, v_42, v_21, v_23, v_24, v_25, v_28, v_30, v_31, v_32, v_33, v_34, v_35, v_37, v_38, v_39, v_36, v_153,v_154,v_155, v_156, v_157, v_158, v_181, v_182,v_183, v_184, v_185, v_186, v_187, v_188, v_189, v_190, v_191, v_192, v_193, v_194, v_195, v_196, v_197, v_198, v_177, v_180, v_178, v_179, v_11, v_12, v_13, v_14, v_15, v_16, v_86, v_87, v_88, v_17, v_248, v_199, v_250, v_246)
+
+# assign column names
+
+colnames(df_label) <- c("v1", "v2", "v3", "v4", "sex", "age", "land", "school", "beruf_anlernzeit", "beruf_teilfacharbeiterabschluss","beruf_abgeschlossene_lehre", "beruf_fachschulabschluss","beruf_meister_techniker", "beruf_fachhochschulabschluss","beruf_hochschulabschluss", "beruf_andere_ausbildung","beruf_andere_ausbildung_o","beruf_keine", "staatsangehörigkeit_deutsch", "staatsangehörigkeit_eu","staatsangehörigkeit_nicht_eu","geburtsort", "v1_nachbar", "v1_heirat", "v1_arbeit", "v1_essen", "v1_freund", "v1_kinder", "v2_nachbar", "v2_heirat", "v2_arbeit", "v2_essen", "v2_freund", "v2_kinder", "v3_nachbar", "v3_heirat", "v3_arbeit", "v3_essen", "v3_freund", "v3_kinder", "v4_nachbar", "v4_heirat", "v4_arbeit", "v4_essen", "v4_freund", "v4_kinder", "eigene_finanzen", "eigene_gesundheit", "andere_gesundheit", "wirtschaftliche_lage", "em_schule", "em_kontakt", "em_freizeit", "em_reisen", "em_profisport", "em_bars", "em_mp_freien", "em_mp_person", "em_keine", "einhaltung_maßnahmen", "infektion", "impfung", "impfbereitschaft", "politik")
+
+
+head(df_label)
 
 ```
+
+```{r Aufbereitung df2, echo=FALSE}
+
+# select variables, which I need for the analysis.
+
+df_numeric <- df2 %>%
+  select(c_0003, c_0004, c_0005, c_0006, v_19, v_258, v_42, v_21, v_23, v_24, v_25, v_28, v_30, v_31, v_32, v_33, v_34, v_35, v_37, v_38, v_39, v_36, v_153,v_154,v_155, v_156, v_157, v_158, v_181, v_182,v_183, v_184, v_185, v_186, v_187, v_188, v_189, v_190, v_191, v_192, v_193, v_194, v_195, v_196, v_197, v_198, v_177, v_180, v_178, v_179, v_11, v_12, v_13, v_14, v_15, v_16, v_86, v_87, v_88, v_17, v_248, v_199, v_250, v_246) 
+
+# assign column names
+
+colnames(df_numeric) <- c("v1", "v2", "v3", "v4", "sex", "age", "land", "school", "beruf_anlernzeit", "beruf_teilfacharbeiterabschluss","beruf_abgeschlossene_lehre", "beruf_fachschulabschluss","beruf_meister_techniker", "beruf_fachhochschulabschluss","beruf_hochschulabschluss", "beruf_andere_ausbildung","beruf_andere_ausbildung_o","beruf_keine", "staatsangehörigkeit_deutsch", "staatsangehörigkeit_eu","staatsangehörigkeit_nicht_eu","geburtsort", "v1_nachbar", "v1_heirat", "v1_arbeit", "v1_essen", "v1_freund", "v1_kinder", "v2_nachbar", "v2_heirat", "v2_arbeit", "v2_essen", "v2_freund", "v2_kinder", "v3_nachbar", "v3_heirat", "v3_arbeit", "v3_essen", "v3_freund", "v3_kinder", "v4_nachbar", "v4_heirat", "v4_arbeit", "v4_essen", "v4_freund", "v4_kinder", "eigene_finanzen", "eigene_gesundheit", "andere_gesundheit", "wirtschaftliche_lage", "em_schule", "em_kontakt", "em_freizeit", "em_reisen", "em_profisport", "em_bars", "em_mp_freien", "em_mp_person", "em_keine", "einhaltung_maßnahmen", "infektion", "impfung", "impfbereitschaft", "politik") 
+
+head(df_numeric)
+
+```
+
+```{r Kontrolle v1 - v4, echo=FALSE}
+
+# v1
+
+count1 <- count(df_numeric, v1) # count how often one vignette appeared
+count1 <- count1[-1,] # deleting missings
+summary(count1$n) # summary
+
+hist(count1$n) # descriptive graph
+
+# v2
+
+count2 <- count(df_numeric, v2) # count how often one vignette appeared
+count2 <- count2[-1,] # deleting missings
+summary(count2$n) # summary
+
+hist(count2$n) # descriptive graph
+
+# v3
+
+count3 <- count(df_numeric, v3) # count how often one vignette appeared
+count3 <- count3[-1,] # deleting missings
+summary(count3$n) # summary
+
+hist(count3$n) # descriptive graph
+
+# v4
+
+count4 <- count(df_numeric, v4) # count how often one vignette appeared
+count4 <- count4[-1,] # deleting missings
+summary(count4$n) # summary
+
+hist(count4$n) # descriptive graph
+```
+
+
+```{r Kontrolle zusammen, echo=FALSE}
+
+dftg <- df_numeric %>% 
+  select(v1, v2, v3, v4)
+
+df_long <- data.frame(v1 = unlist(dftg, use.names = FALSE))
+
+count_long <- count(df_long, v1)
+count5 <- count_long[-1,] # deleting missings
+summary(count5$n) # summary
+
+hist(count5$n) # descriptive graph
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
